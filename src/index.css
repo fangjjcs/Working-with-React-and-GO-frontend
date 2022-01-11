@@ -3,14 +3,19 @@
 
 :root{
 
+  --font-color-body: #555;
   --surface-light: rgb(245, 245, 245);
+
+  --spacing-lg: 4rem;
+  --spacing-md: 2rem;
+  --spacing-s: 1rem;
 
   --font-header: normal 2rem 'Permanent Marker';
   --font-nav: normal 1rem 'Open Sans';
   --font-body-100: normal 10px 'Open Sans';
   --font-footer: normal 0.5rem 'Open Sans';
 
-  --font-color-body: #555;
+  
 
 }
 

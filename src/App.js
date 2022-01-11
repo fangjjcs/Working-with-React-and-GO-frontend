@@ -1,7 +1,13 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import Footer from './shared/components/Footer/Footer';
+import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+
+import './App.css';
 import MainNavigation from './shared/components/Navigation/MainNavigation';
+
+import GenresPage from './views/GenresPage/GenresPage';
+import HomePage from './views/HomePage/HomePage';
+import LoginPage from './views/LoginPage/LoginPage';
+import MoviesPage from './views/MoviesPage/MoviesPage';
 
 const APP_CONFIG = {
   headerName: "Template Header",
@@ -13,10 +19,21 @@ const App = () => {
       <MainNavigation config={APP_CONFIG}/>
       <main>
         <Switch>
-          <Route></Route>
+          {/* <Route exact path="/" render={(props) => <Home {...props} title={`hello`}/>} /> */}
+          <Route exact path="/">
+            <HomePage title={`Home`}/>
+          </Route>
+          <Route exact path="/genres">
+            <GenresPage title={`Genres`}/>
+          </Route>
+          <Route exact path="/movies">
+            <MoviesPage title={`Movies`}/>
+          </Route>
+          <Route exact path="/login">
+            <LoginPage />
+          </Route>
         </Switch> 
       </main>
-      
     </Router>
   )
 }

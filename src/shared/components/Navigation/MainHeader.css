@@ -1,6 +1,6 @@
 .main-header {
     width: 100%;
-    height: 3rem;
+    height: var(--spacing-lg);
     display: flex;
     align-items: center;
     position: fixed;

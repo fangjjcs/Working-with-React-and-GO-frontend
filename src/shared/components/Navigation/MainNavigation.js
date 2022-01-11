@@ -41,7 +41,7 @@ const MainNavigation = props => {
                 <nav className="main-navigation__header-nav-auth">
                     <ul className="nav-links">
                         <li>
-                            <NavLink to="/auth">Login</NavLink>
+                            <NavLink to="/login">Login</NavLink>
                         </li>
                     </ul>
                 </nav>
