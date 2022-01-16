@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 import './App.css';
@@ -6,14 +6,12 @@ import MainNavigation from './shared/components/Navigation/MainNavigation';
 
 import HomePage from './views/HomePage/HomePage';
 import Page1 from './views/Page1/Page1';
-import page1 from './views/Page1/Page1';
 import Page2 from './views/Page2/Page2';
-import page2 from './views/Page2/Page2';
 import Page3 from './views/Page3/Page3';
 import Page4 from './views/Page4/Page4';
 
 const APP_CONFIG = {
-  headerName: "Template Header",
+  headerName: "Dashboard Name",
 }
 
 const links = [
@@ -39,21 +37,21 @@ const App = () => {
       <main>
         <Switch>
           <Route exact path="/">
-            <HomePage title={`Home`}/>
+            <HomePage title={`Home`} getHeader={getHeaderHandler}/>
           </Route>
           <Route exact path="/page1">
-            <Page1 title={`Page 1`}/>
+            <Page1 title={`Page 1`} getHeader={getHeaderHandler}/>
           </Route>
           <Route exact path="/page2">
-            <Page2 title={`Page 2`}/>
+            <Page2 title={`Page 2`} getHeader={getHeaderHandler}/>
           </Route>
           <Route exact path="/page3">
-            <Page3 title={`Page 3`}/>
+            <Page3 title={`Page 3`} getHeader={getHeaderHandler}/>
           </Route>
           <Route exact path="/page4">
-            <Page4 title={`Page 4`}/>
+            <Page4 title={`Page 4`} getHeader={getHeaderHandler}/>
           </Route>
-          <Redirect to="/"/>
+          <Redirect to="/" />
         </Switch> 
       </main>
     </Router>

@@ -41,9 +41,10 @@ const MainNavigation = props => {
     }
 
     const closeDrawerAndSwitch = (event) => {
-        setDrawerIsOpen(false);
         const route = window.location.hash.split("#")[1]
         props.getHeader(route)
+        setDrawerIsOpen(false);
+        setLinks(linksArr)
     }
 
     const onChangeTextHandler = (event) => {

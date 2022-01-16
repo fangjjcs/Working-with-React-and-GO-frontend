@@ -4,7 +4,8 @@
     top: 0;
     z-index: 11;
     height: 100vh;
-    width: 15rem;
+    width: fit-content;
+    min-width: 15rem;
     background:#fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0,0.26);
+    box-shadow: var(--shadow-btn);
 }

@@ -1,5 +1,5 @@
 .main-navigation__menu-btn {
-    width: 3rem;
+    width: fit-content;
     height: 1.5rem;
     background: transparent;
     border: none;
@@ -8,7 +8,8 @@
     justify-content: space-around;
     margin-right: 0rem;
     cursor: pointer;
-    padding-left: 0;
+    padding: 0;
+    padding-right: 1rem;
   }
   
   .main-navigation__menu-btn span {
