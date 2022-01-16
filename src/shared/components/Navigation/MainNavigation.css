@@ -27,16 +27,16 @@
     color: #666;
   }
   
-  .main-navigation__header-nav-auth{
+  .main-navigation__header-nav-avatar{
     position: fixed;
-    right: 1rem;
+    right: 0.5rem;
   }
   
   .main-navigation__drawer-nav {
     height: 100%;
+    padding-top: var(--spacing-lg);
     display: flex;
     flex-direction: column;
     justify-content: space-around;
   }
   
- 
