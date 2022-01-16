@@ -1,5 +1,5 @@
 .main-navigation__menu-btn {
-    width: 3rem;
+    width: fit-content;
     height: 1.5rem;
     background: transparent;
     border: none;
@@ -8,6 +8,8 @@
     justify-content: space-around;
     margin-right: 0rem;
     cursor: pointer;
+    padding: 0;
+    padding-right: 1rem;
   }
   
   .main-navigation__menu-btn span {
@@ -27,16 +29,23 @@
     color: #666;
   }
   
-  .main-navigation__header-nav-auth{
+  .main-navigation__header-nav-avatar{
     position: fixed;
-    right: 1rem;
+    right: 0.5rem;
   }
   
   .main-navigation__drawer-nav {
     height: 100%;
+    padding-top: var(--spacing-lg);
     display: flex;
     flex-direction: column;
     justify-content: space-around;
   }
   
- 
+.search-field{
+  padding: 1rem;
+}
+
+.search-field__text{
+  width: 100%;
+}

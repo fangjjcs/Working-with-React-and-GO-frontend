@@ -1,17 +1,24 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
 :root{
 
+  --font-color-body: #555;
   --surface-light: rgb(245, 245, 245);
 
-  --font-header: normal 2rem 'Permanent Marker';
+  --spacing-lg: 3rem;
+  --spacing-md: 2rem;
+  --spacing-s: 1rem;
+
+  --font-header: normal 1.5rem 'Open Sans';
   --font-nav: normal 1rem 'Open Sans';
+  --font-label: normal 1rem 'Open Sans';
   --font-body-100: normal 10px 'Open Sans';
   --font-footer: normal 0.5rem 'Open Sans';
 
-  --font-color-body: #555;
+  --boxshadow-nav: 0 2px 6px rgba(0, 0, 0, 0.25);
+  --shadow-btn: 0 2px 6px rgba(0, 0, 0, 0.25);
 
+  --color-label: #aaa;
 }
 
 * {
@@ -38,7 +45,7 @@ body {
 .slide-in-left-enter-active {
   transform: translateX(0);
   opacity: 1;
-  transition: all 400ms;
+  transition: all 300ms;
 }
 
 .slide-in-left-exit {
@@ -49,7 +56,7 @@ body {
 .slide-in-left-exit-active {
   transform: translateX(-100%);
   opacity: 0;
-  transition: all 200ms;
+  transition: all 300ms;
 }
 
 .center {
