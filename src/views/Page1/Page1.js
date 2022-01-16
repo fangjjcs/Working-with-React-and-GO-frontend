@@ -1,5 +1,5 @@
 
-const MoviesPage = (props) => {
+const Page1 = (props) => {
     return (
         <div>
             <header>
@@ -9,4 +9,4 @@ const MoviesPage = (props) => {
     )
 }
 
-export default MoviesPage;
+export default Page1;

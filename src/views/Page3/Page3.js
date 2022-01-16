@@ -1,6 +1,5 @@
 
-const LoginPage = (props) => {
-    
+const Page3 = (props) => {
     return (
         <div>
             <header>
@@ -10,4 +9,4 @@ const LoginPage = (props) => {
     )
 }
 
-export default LoginPage;
+export default Page3;

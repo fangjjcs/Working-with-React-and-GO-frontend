@@ -1,6 +1,5 @@
 
-const GenresPage = (props) => {
-    
+const Page4 = (props) => {
     return (
         <div>
             <header>
@@ -10,4 +9,4 @@ const GenresPage = (props) => {
     )
 }
 
-export default GenresPage;
+export default Page4;

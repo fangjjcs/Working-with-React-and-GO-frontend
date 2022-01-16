@@ -1,13 +1,13 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import { Link, NavLink } from "react-router-dom";
 import MainHeader from "./MainHeader";
 import './MainNavigation.css';
-import NavLinks from "./NavLinks"; 
 import SideDrawer from "./SideDrawer";
 import BackDrop from "../Backdrop/Backdrop"
 import Footer from "../Footer/Footer";
-import { Avatar, Drawer } from "@material-ui/core";
+import { Avatar, TextField } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import NavLinks from "./NavLinks";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,39 +20,49 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(4),
       height: theme.spacing(4),
       fontSize: "1rem",
-    },
-    large: {
-      width: theme.spacing(7),
-      height: theme.spacing(7),
-    },
+    }
   }));
+
 
 
 const MainNavigation = props => {
     
     const classes = useStyles();
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+    const linksArr = props.links;
+    const [links, setLinks] = useState(linksArr)
 
-    const openDrawer =()=>{
+    const openDrawer = () =>{
         setDrawerIsOpen(!drawerIsOpen);
     }
 
-    const closeDrawer =()=>{
+    const closeDrawer = (event) =>{
         setDrawerIsOpen(false);
+    }
+
+    const closeDrawerAndSwitch = (event) => {
+        setDrawerIsOpen(false);
+        const route = window.location.hash.split("#")[1]
+        props.getHeader(route)
+    }
+
+    const onChangeTextHandler = (event) => {
+        if(event.target.value === "") {
+            setLinks(linksArr)
+        } else {
+            setLinks(linksArr.filter(link => link.name.toLowerCase().includes(event.target.value.toLowerCase())))
+        }
     }
 
     return (
         <React.Fragment>
-            {/* <Drawer open={drawerIsOpen} onClose={closeDrawer}>
-                <nav className="main-navigation__drawer-nav">
-                    <NavLinks onClose={closeDrawer}/>
-                    <Footer/>
-                </nav>
-            </Drawer> */}
             {drawerIsOpen? <BackDrop onClick={closeDrawer}/>: null }
-            <SideDrawer show={drawerIsOpen} >
+            <SideDrawer show={drawerIsOpen}>
                 <nav className="main-navigation__drawer-nav">
-                    <NavLinks onClose={closeDrawer}/>
+                    <div className="search-field">
+                        <TextField className="search-field__text" id="standard-basic" label="Search Page ..."  onChange={onChangeTextHandler}/>
+                    </div>
+                    <NavLinks links={links} onClose={closeDrawerAndSwitch}/>
                     <Footer/>
                 </nav>
             </SideDrawer>
@@ -63,7 +73,7 @@ const MainNavigation = props => {
                     <span />
                 </button>
                 <h2 className="main-navigation__title">
-                    <Link to="/">{props.config.headerName}</Link>
+                    <Link to="/">{props.config.headerName} / {props.header}</Link>
                 </h2>
                 <nav className="main-navigation__header-nav-avatar">
                     <Avatar className={classes.small}>N</Avatar>

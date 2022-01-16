@@ -1,19 +1,27 @@
+.group-label {
+  width: 100%;
+  padding: 1rem 0;
+  font: var(--font-label);
+  color: var(--color-label);
+}
+
 .nav-links {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 1rem;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     overflow-y: scroll;
-
   }
   
   .nav-links li {
-    margin: 1rem;
+    margin: 0.5rem;
+    width: 100%;
+    padding-left: 1rem;
   }
   
   .nav-links a {
