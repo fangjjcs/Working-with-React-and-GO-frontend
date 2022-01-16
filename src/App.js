@@ -33,7 +33,7 @@ const App = () => {
   
   return (
     <Router>
-      <MainNavigation config={APP_CONFIG} links={links} getHeader={getHeaderHandler} header={selectedHeader}/>
+      <MainNavigation config={APP_CONFIG} links={links} header={selectedHeader}/>
       <main>
         <Switch>
           <Route exact path="/">

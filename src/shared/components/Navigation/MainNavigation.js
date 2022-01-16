@@ -40,9 +40,7 @@ const MainNavigation = props => {
         setDrawerIsOpen(false);
     }
 
-    const closeDrawerAndSwitch = (event) => {
-        const route = window.location.hash.split("#")[1]
-        props.getHeader(route)
+    const closeDrawerAndReset = () => {
         setDrawerIsOpen(false);
         setLinks(linksArr)
     }
@@ -63,7 +61,7 @@ const MainNavigation = props => {
                     <div className="search-field">
                         <TextField className="search-field__text" id="standard-basic" label="Search Page ..."  onChange={onChangeTextHandler}/>
                     </div>
-                    <NavLinks links={links} onClose={closeDrawerAndSwitch}/>
+                    <NavLinks links={links} onClose={closeDrawerAndReset}/>
                     <Footer/>
                 </nav>
             </SideDrawer>
