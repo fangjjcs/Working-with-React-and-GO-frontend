@@ -62,7 +62,7 @@ const HomePage = (props) => {
     return (
         <div>
             <header>
-                <div>{props.title}</div>
+                <div className="title">{props.title}</div>
                 <Paper elevation={3} className="paper" >
                     <div className="ag-theme-material" style={{height: 400, width: 600}}>
                         <Button onClick={onButtonClick}><CheckBoxIcon /></Button>

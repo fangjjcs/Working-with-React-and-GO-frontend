@@ -3,3 +3,7 @@
     height: fit-content;
     padding: 2rem 2rem 4rem 2rem;
 }
+
+.title {
+    font-size: clamp(2rem, 4vw, 3rem);
+}
