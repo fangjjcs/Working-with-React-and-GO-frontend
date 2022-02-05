@@ -5,13 +5,13 @@ import "./App.css";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import AdminPage from "./views/AdminPage/AdminPage";
 
-import GenresPage from "./views/GenresPage/GenresPage";
+import OrderPage from "./views/OrderPage/OrderPage";
 import HomePage from "./views/HomePage/HomePage";
 import LoginPage from "./views/LoginPage/LoginPage";
-import MoviesPage from "./views/MoviesPage/MoviesPage";
+import CreatePage from "./views/CreatePage/CreatePage";
 
 const APP_CONFIG = {
-  headerName: "JY NoteBook",
+  headerName: "Afternoon Tea Time",
 };
 
 const App = () => {
@@ -25,11 +25,11 @@ const App = () => {
           <Route exact path="/">
             <HomePage title={`Home`} />
           </Route>
-          <Route exact path="/genres">
-            <GenresPage title={`Genres`} />
+          <Route exact path="/order">
+            <OrderPage title={`Order`} />
           </Route>
-          <Route exact path="/movies">
-            <MoviesPage title={`Movies`} />
+          <Route exact path="/create">
+            <CreatePage title={`Create`} />
           </Route>
           <Route exact path="/admin">
             <AdminPage title={`Admin`} />

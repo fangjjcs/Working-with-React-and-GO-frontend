@@ -11,17 +11,17 @@ const NavLinks = (props) => {
     <ul className="nav-links">
       <li>
         <NavLink to="/" exact>
-          Home
+          首頁
         </NavLink>
       </li>
       <li>
-        <NavLink to="/movies">Movies</NavLink>
+        <NavLink to="/create">新增菜單</NavLink>
       </li>
       <li>
-        <NavLink to="/genres">Genres</NavLink>
+        <NavLink to="/order">點餐</NavLink>
       </li>
       {authContext.isLogin && (<li>
-        <NavLink to="/admin">Admin</NavLink>
+        <NavLink to="/admin">管理</NavLink>
       </li>)}
     </ul>
   );
