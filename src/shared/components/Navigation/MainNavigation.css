@@ -40,3 +40,10 @@
   }
   
  
+  .logout-btn {
+    cursor: pointer;
+    padding: var(--spacing-s);
+  }
+  .logout-btn:hover {
+    color: rgb(226, 155, 0);
+  }
