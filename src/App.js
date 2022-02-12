@@ -9,6 +9,7 @@ import OrderPage from "./views/OrderPage/OrderPage";
 import HomePage from "./views/HomePage/HomePage";
 import LoginPage from "./views/LoginPage/LoginPage";
 import CreatePage from "./views/CreatePage/CreatePage";
+import ResultPage from "./views/ResultPage/ResultPage";
 
 const APP_CONFIG = {
   headerName: "Afternoon Tea Time",
@@ -25,11 +26,14 @@ const App = () => {
           <Route exact path="/">
             <HomePage title={`Home`} />
           </Route>
-          <Route exact path="/order">
+          <Route exact path="/order/:id">
             <OrderPage title={`Order`} />
           </Route>
           <Route exact path="/create">
             <CreatePage title={`Create`} />
+          </Route>
+          <Route exact path="/result">
+            <ResultPage title={`Result`} />
           </Route>
           <Route exact path="/admin">
             <AdminPage title={`Admin`} />

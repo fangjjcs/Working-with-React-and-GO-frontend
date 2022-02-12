@@ -42,7 +42,7 @@
  
   .logout-btn {
     cursor: pointer;
-    padding: var(--spacing-s);
+    padding: var(--spacing-sm);
   }
   .logout-btn:hover {
     color: rgb(226, 155, 0);

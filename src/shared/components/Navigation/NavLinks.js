@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 
 import "./NavLinks.css";
@@ -14,15 +14,19 @@ const NavLinks = (props) => {
           首頁
         </NavLink>
       </li>
-      <li>
-        <NavLink to="/create">新增菜單</NavLink>
-      </li>
-      <li>
-        <NavLink to="/order">點餐</NavLink>
-      </li>
-      {authContext.isLogin && (<li>
-        <NavLink to="/admin">管理</NavLink>
-      </li>)}
+      {authContext.isLogin && (
+        <>
+          <li>
+            <NavLink to="/create">新增菜單</NavLink>
+          </li>
+          <li>
+            <NavLink to="/result">點餐狀態</NavLink>
+          </li>
+          <li>
+            <NavLink to="/admin">管理</NavLink>
+          </li>
+        </>
+      )}
     </ul>
   );
 };

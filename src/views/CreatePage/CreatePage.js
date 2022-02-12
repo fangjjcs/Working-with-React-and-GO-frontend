@@ -10,10 +10,13 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import { Restaurant, Fastfood, Info } from "@material-ui/icons";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import "./CreatePage.css";
+import { useHttpClient } from "../../shared/hook/http-hook";
+import { useHistory } from "react-router-dom";
+import AuthContext from "../../shared/context/auth-context";
 
 const theme = createTheme({
   status: {
@@ -39,6 +42,19 @@ const MoviesPage = (props) => {
   const [type, setType] = useState("food");
   const [memo, setMemo] = useState("");
   const [isError, setIsError] = useState(false);
+  const { isLoading, error, sendRequest } = useHttpClient();
+  const history = useHistory()
+
+  const authContext = useContext(AuthContext)
+  const header = new Headers()
+  header.append("Content-Type", "application/json")
+  header.append("Authorization", "Bearer " + authContext.token)
+
+  useEffect(() => {
+    if(!authContext.isLogin) {
+        history.replace("/login")
+    }
+}, [])
 
   const handleImgChange = (event) => {
     const file = event.target.files[0];
@@ -47,7 +63,6 @@ const MoviesPage = (props) => {
       const reader = new FileReader();
       reader.onload = function (e) {
         setFileString(e.target.result);
-        console.log(e.target.result);
       };
       reader.readAsDataURL(file);
     }
@@ -82,6 +97,33 @@ const MoviesPage = (props) => {
       fileString: fileString
     }
     console.log(request)
+    if(checkPass) {
+      createPost(request)
+    }
+  };
+
+  const createPost = (request) => {
+    const fetchData = async () => {
+      try {
+        const responseData = await sendRequest(
+          "http://localhost:4000/create",
+          "POST",
+          JSON.stringify(request),
+          header
+        );
+
+        console.log(responseData);
+        if (responseData.status === 403) {
+          history.replace("/login")
+        } else if (responseData.status === 200) {
+          history.replace("/")
+        } 
+      
+      } catch (err) {
+        // done in http-hook.js
+      }
+    };
+    fetchData();
   };
 
   return (

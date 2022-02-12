@@ -23,13 +23,9 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#28464b",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#28464b",
-      contrastText: "#fff",
-    },
+      main: "#005566",
+      darker: "#005566",
+    }
   },
 });
 
@@ -60,6 +56,7 @@ const LoginPage = (props) => {
   };
 
   const login = (request) => {
+    console.log(request)
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
@@ -77,7 +74,9 @@ const LoginPage = (props) => {
           setIsError(false);
           setErrorMsg("");
           console.log(responseData)
-          authContext.login(responseData.response)
+          authContext.login(responseData.response.jwt)
+          authContext.saveUser(responseData.response.username)
+          authContext.setSuccess("成功登入!");
           history.replace("/")
         }
       } catch (err) {
