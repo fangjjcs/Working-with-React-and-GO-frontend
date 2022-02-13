@@ -2,11 +2,7 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom/";
 import { Box, Button, Paper } from "@material-ui/core";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-// import VisibilityIcon from "@material-ui/icons/Visibility";
-import EditRoundedIcon from '@material-ui/icons/EditRounded';
-import { AccountCircle } from "@material-ui/icons";
-import Password from "@material-ui/icons/VpnKey";
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
@@ -14,8 +10,10 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 
 import "./ResultPage.css";
+import EditDialog from "./components/Dialog";
 import { useHttpClient } from "../../shared/hook/http-hook";
 import AuthContext from "../../shared/context/auth-context";
+import SnackBar from "../HomePage/components/SnackBar";
 
 const theme = createTheme({
   status: {
@@ -29,11 +27,15 @@ const theme = createTheme({
   },
 });
 
-const LoginPage = (props) => {
+const ResultPage = (props) => {
   const [rowData, setRowData] = useState([]);
   const gridRef = useRef(null);
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogData, setDialogData] = useState({});
+  const [isSnackBarOpen, setSnackBarOpen] = useState(false);
 
   const { isLoading, error, sendRequest } = useHttpClient();
   const authContext = useContext(AuthContext);
@@ -47,8 +49,18 @@ const LoginPage = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(rowData)
-  }, [rowData]);
+    checkSnackBar()
+  }, [authContext.isSuccess]);
+
+  const checkSnackBar = () => {
+    if (authContext.isSuccess) {
+      setSnackBarOpen(true);
+    }
+    setTimeout(() => {
+        setSnackBarOpen(false)
+        authContext.setSuccess("")
+    }, 3000)
+  };
 
   const fetchResult = () => {
     const fetchData = async () => {
@@ -65,7 +77,9 @@ const LoginPage = (props) => {
           authContext.setSuccess("有地方出錯了!");
           history.replace("/");
         } else {
-          setRowData([...responseData.orders,{
+          setRowData([
+            ...responseData.orders,
+            {
               id: 100,
               menuId: 100,
               name: "--",
@@ -77,8 +91,10 @@ const LoginPage = (props) => {
               memo: "--",
               count: sumAllSum(responseData.orders)[1],
               user: "總價",
-              updated_at: "--"
-          } ]);
+              updated_at: "--",
+            },
+          ]);
+          checkSnackBar();
         }
       } catch (err) {
         // done in http-hook.js
@@ -88,14 +104,14 @@ const LoginPage = (props) => {
   };
 
   const sumAllSum = (orders) => {
-    let sumPrice = 0
-    let sumCount = 0
-    for(let i = 0 ; i < orders.length ; i++) {
-        sumPrice += parseInt(orders[i].price)
-        sumCount += parseInt(orders[i].count)
+    let sumPrice = 0;
+    let sumCount = 0;
+    for (let i = 0; i < orders.length; i++) {
+      sumPrice += parseInt(orders[i].price);
+      sumCount += parseInt(orders[i].count);
     }
-    return [sumPrice, sumCount]
-  }
+    return [sumPrice, sumCount];
+  };
 
   const onGridReady = (params) => {
     setGridApi(params.api);
@@ -117,20 +133,32 @@ const LoginPage = (props) => {
   ]);
 
   const cellRender = (props) => {
-    const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
     const buttonClicked = () => {
-        alert(`${cellValue} medals won!`)
+      setDialogData(props.data);
+      setOpenDialog(true);
+    };
+    if (props.data.user === "總價") {
+      return null;
     }
-    return(
-        <span>
-            <a href="/">{cellValue}</a>&nbsp;
-            <Button onClick={() => buttonClicked()}><EditRoundedIcon/></Button>
-        </span>
-    )
-}
+    return (
+      <span className="edit-box">
+        <Button className="edit-btn" onClick={() => buttonClicked()}>
+          <EditRoundedIcon />
+        </Button>
+      </span>
+    );
+  };
 
-const rowClass = 'my-ag-row';
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
 
+  const rowClass = "my-ag-row";
+  const rowClassRules = {
+    "ag-row-total": function (params) {
+      return params.data.user === "總價";
+    },
+  };
   return (
     <header className="result-page-header">
       <ThemeProvider theme={theme}>
@@ -138,7 +166,7 @@ const rowClass = 'my-ag-row';
           <Paper elevation={3} className="paper">
             <div
               className="ag-theme-material"
-              style={{ height:1000, width: 1000 }}
+              style={{ height: 1000, width: 1000 }}
             >
               <Button onClick={() => onBtnExport()}>
                 {" "}
@@ -152,26 +180,84 @@ const rowClass = 'my-ag-row';
                 ref={gridRef}
                 onGridReady={onGridReady}
                 frameworkComponents={{
-                    cellRender: cellRender
+                  cellRender: cellRender,
                 }}
                 rowClass={rowClass}
+                rowClassRules={rowClassRules}
               >
-                <AgGridColumn sortable={ true } filter={true} field="user" width={100}></AgGridColumn>
-                <AgGridColumn sortable={ true } filter={true} field="name" width={120}></AgGridColumn>
-                <AgGridColumn sortable={ true } filter={true} field="item" minWidth={130} maxWidth={150}></AgGridColumn>
-                <AgGridColumn sortable={ true } filter={true} field="sugar" width={100}></AgGridColumn>
-                <AgGridColumn sortable={ true } filter={true} field="ice" width={100}></AgGridColumn>
-                <AgGridColumn sortable={ true } filter={true} field="memo" width={120}></AgGridColumn>
-                <AgGridColumn sortable={ true } filter={true} field="count" width={120}></AgGridColumn>
-                <AgGridColumn sortable={ true } filter={true} field="price" width={100}></AgGridColumn>
-                <AgGridColumn field="編輯" width={150} cellRenderer="cellRender"></AgGridColumn>
+                <AgGridColumn
+                  sortable={true}
+                  filter={true}
+                  field="user"
+                  width={100}
+                ></AgGridColumn>
+                <AgGridColumn
+                  sortable={true}
+                  filter={true}
+                  field="name"
+                  width={120}
+                ></AgGridColumn>
+                <AgGridColumn
+                  sortable={true}
+                  filter={true}
+                  field="item"
+                  minWidth={130}
+                  maxWidth={150}
+                ></AgGridColumn>
+                <AgGridColumn
+                  sortable={true}
+                  filter={true}
+                  field="sugar"
+                  width={100}
+                ></AgGridColumn>
+                <AgGridColumn
+                  sortable={true}
+                  filter={true}
+                  field="ice"
+                  width={100}
+                ></AgGridColumn>
+                <AgGridColumn
+                  sortable={true}
+                  filter={true}
+                  field="memo"
+                  width={120}
+                ></AgGridColumn>
+                <AgGridColumn
+                  sortable={true}
+                  filter={true}
+                  field="count"
+                  width={120}
+                ></AgGridColumn>
+                <AgGridColumn
+                  sortable={true}
+                  filter={true}
+                  field="price"
+                  width={100}
+                ></AgGridColumn>
+                <AgGridColumn
+                  field="編輯"
+                  width={150}
+                  cellRenderer="cellRender"
+                ></AgGridColumn>
               </AgGridReact>
             </div>
           </Paper>
         </Box>
+        {openDialog && dialogData && (
+          <EditDialog
+            isOpen={openDialog}
+            data={dialogData}
+            onClickCancel={handleClose}
+            reloadOrder={fetchResult}
+          ></EditDialog>
+        )}
+        <SnackBar
+          isOpen={isSnackBarOpen}
+          text={authContext.successText}
+        ></SnackBar>
       </ThemeProvider>
     </header>
   );
 };
 
-export default LoginPage;
+export default ResultPage;
