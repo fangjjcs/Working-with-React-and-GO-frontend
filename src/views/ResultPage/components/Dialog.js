@@ -131,7 +131,7 @@ const EditDialog = (props) => {
     }
     return(
         <Dialog open={props.isOpen} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="xs" fullWidth={true}>
-            <DialogTitle id="form-dialog-title">修改訂單 : {user} {menuName}</DialogTitle>
+            <DialogTitle id="form-dialog-title">{user} 修改訂單 : {menuName}</DialogTitle>
             <DialogContent className="order-content">
               <FormControl variant="standard" className="login-form">
                 <InputLabel htmlFor="input-with-icon-adornment">

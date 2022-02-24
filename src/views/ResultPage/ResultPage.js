@@ -1,8 +1,14 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom/";
 import { Box, Button, Paper } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
@@ -35,6 +41,8 @@ const ResultPage = (props) => {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogData, setDialogData] = useState({});
+  const [openDelDialog, setOpenDelDialog] = useState(false);
+  const [dialogDelData, setDialogDelData] = useState({});
   const [isSnackBarOpen, setSnackBarOpen] = useState(false);
 
   const { isLoading, error, sendRequest } = useHttpClient();
@@ -49,7 +57,7 @@ const ResultPage = (props) => {
   }, []);
 
   useEffect(() => {
-    checkSnackBar()
+    checkSnackBar();
   }, [authContext.isSuccess]);
 
   const checkSnackBar = () => {
@@ -57,9 +65,9 @@ const ResultPage = (props) => {
       setSnackBarOpen(true);
     }
     setTimeout(() => {
-        setSnackBarOpen(false)
-        authContext.setSuccess("")
-    }, 3000)
+      setSnackBarOpen(false);
+      authContext.setSuccess("");
+    }, 3000);
   };
 
   const fetchResult = () => {
@@ -149,8 +157,59 @@ const ResultPage = (props) => {
     );
   };
 
+  const cellRenderDel = (props) => {
+    const buttonClicked = () => {
+      setDialogDelData(props.data);
+      setOpenDelDialog(true);
+    };
+    if (props.data.user === "總價") {
+      return null;
+    }
+    return (
+      <span className="edit-box">
+        <Button className="edit-btn" onClick={() => buttonClicked()}>
+          <DeleteIcon />
+        </Button>
+      </span>
+    );
+  };
+
   const handleClose = () => {
     setOpenDialog(false);
+  };
+
+  const handleDelClose = () => {
+    setOpenDelDialog(false);
+  };
+
+  const handleSubmit = () => {
+    deleteOrder(dialogDelData);
+  };
+
+  const deleteOrder = (request) => {
+    const deleteOrder = async () => {
+      try {
+        const responseData = await sendRequest(
+          "http://localhost:4000/delete-order",
+          "POST",
+          JSON.stringify(request),
+          header
+        );
+
+        console.log(responseData);
+        if (responseData.status === 403) {
+          authContext.logout();
+          history.replace("/login");
+        } else if (responseData.status === 200) {
+          authContext.setSuccess("成功刪除餐點!")
+          setOpenDelDialog(false);
+          window.location.reload()
+        }
+      } catch (err) {
+        // done in http-hook.js
+      }
+    };
+    deleteOrder();
   };
 
   const rowClass = "my-ag-row";
@@ -166,7 +225,7 @@ const ResultPage = (props) => {
           <Paper elevation={3} className="paper">
             <div
               className="ag-theme-material"
-              style={{ height: 1000, width: 1000 }}
+              style={{ height: 540, width: 1000 }}
             >
               <Button onClick={() => onBtnExport()}>
                 {" "}
@@ -181,6 +240,7 @@ const ResultPage = (props) => {
                 onGridReady={onGridReady}
                 frameworkComponents={{
                   cellRender: cellRender,
+                  cellRenderDel: cellRenderDel,
                 }}
                 rowClass={rowClass}
                 rowClassRules={rowClassRules}
@@ -208,13 +268,13 @@ const ResultPage = (props) => {
                   sortable={true}
                   filter={true}
                   field="sugar"
-                  width={100}
+                  width={80}
                 ></AgGridColumn>
                 <AgGridColumn
                   sortable={true}
                   filter={true}
                   field="ice"
-                  width={100}
+                  width={80}
                 ></AgGridColumn>
                 <AgGridColumn
                   sortable={true}
@@ -226,7 +286,7 @@ const ResultPage = (props) => {
                   sortable={true}
                   filter={true}
                   field="count"
-                  width={120}
+                  width={100}
                 ></AgGridColumn>
                 <AgGridColumn
                   sortable={true}
@@ -236,8 +296,13 @@ const ResultPage = (props) => {
                 ></AgGridColumn>
                 <AgGridColumn
                   field="編輯"
-                  width={150}
+                  width={80}
                   cellRenderer="cellRender"
+                ></AgGridColumn>
+                <AgGridColumn
+                  field="刪除"
+                  width={80}
+                  cellRenderer="cellRenderDel"
                 ></AgGridColumn>
               </AgGridReact>
             </div>
@@ -250,6 +315,30 @@ const ResultPage = (props) => {
             onClickCancel={handleClose}
             reloadOrder={fetchResult}
           ></EditDialog>
+        )}
+        {openDelDialog && dialogDelData && (
+          <Dialog
+            open={openDelDialog}
+            onClose={handleDelClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            maxWidth={"xs"}
+            fullWidth={true}
+          >
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                刪除點餐？
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDelClose} color="primary">
+                取消
+              </Button>
+              <Button onClick={handleSubmit} color="primary" autoFocus>
+                刪除!
+              </Button>
+            </DialogActions>
+          </Dialog>
         )}
         <SnackBar
           isOpen={isSnackBarOpen}

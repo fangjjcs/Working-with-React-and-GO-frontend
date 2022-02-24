@@ -38,7 +38,7 @@ export default function OrderItemList(props) {
       {props.list.map((item, key) => {
         return (
           <div className={styles.ListContent} key={key}>
-            <WhatshotIcon style={{ color: "#eb4034" }} />
+            <WhatshotIcon style={{ color: "#e76852" }} />
             <List
               component="nav"
               aria-label={item.name}

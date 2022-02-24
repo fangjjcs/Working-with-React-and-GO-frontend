@@ -165,6 +165,7 @@ const OrderPage = (props) => {
         <ThemeProvider theme={theme}>
           <Box className="order-page-box">
             <div className="order-content">
+              <div className="memo">嗨，{user}，請開始點餐</div>
               <div className="menu-name">
                 {menuName}
                 {memo && <div className="memo">{memo}</div>}

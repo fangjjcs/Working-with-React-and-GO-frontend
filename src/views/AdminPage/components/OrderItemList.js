@@ -3,28 +3,36 @@ import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import { Link, useHistory } from "react-router-dom";
+import DeleteIcon from "@material-ui/icons/Delete";
+import styles from "./styles.module.css";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
+
 import { useHttpClient } from "../../../shared/hook/http-hook";
-import { useHistory } from "react-router-dom";
 import AuthContext from "../../../shared/context/auth-context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    paddingLeft: theme.spacing(0),
+    paddingRight: theme.spacing(0),
     backgroundColor: theme.palette.background.paper,
   },
 }));
 
 const useStylesList = makeStyles((theme) => ({
   root: {
-    paddingTop: theme.spacing(2),
+    paddingTop: theme.spacing(0),
     paddingBottom: theme.spacing(0),
+    marginLeft: theme.spacing(1),
+    width: "100%",
+    backgroundColor: "#E9D8A6",
+    // border: "solid #E9D8A6 2px",
+    borderRadius: "0.25rem",
   },
 }));
 
@@ -34,95 +42,97 @@ const useStylesListItem = makeStyles((theme) => ({
     paddingBottom: theme.spacing(0),
     backgroundColor: "#E9D8A6",
     // border: "solid #E9D8A6 2px",
-    borderRadius: "0.25rem"
+    borderRadius: "0.25rem",
   },
 }));
 
-
-export default function MenuItemList(props) {
+export default function OrderItemList(props) {
   const classes = useStyles();
   const classesList = useStylesList();
   const classesListItem = useStylesListItem();
 
-  const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState({
-      id: null,
-      name: ""
-  });
+  const [isOpen, setIsOpen] = useState(false);
+  const [id, setID] = useState(null);
+  const [name, setName] = useState("");
 
-  const { isLoading, error, sendRequest } = useHttpClient();
   const history = useHistory();
-
+  const { isLoading, error, sendRequest } = useHttpClient();
   const authContext = useContext(AuthContext);
   const header = new Headers();
   header.append("Content-Type", "application/json");
   header.append("Authorization", "Bearer " + authContext.token);
 
-  const handleClickOpen = (e) => {
-    setSelectedItem({
-        id: parseInt(e.target.id),
-        name: e.target.innerText
-    });
-    setOpen(true);
+  const handleDeleteDialogOpen = (event) => {
+    setIsOpen(true);
+    setName(event.target.innerText);
+    setID(event.target.id);
+  };
+
+  const handleDelete = () => {
+    const request = {
+      id: parseInt(id),
+      name: name,
+    };
+    deleteOpenMenu(request);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setIsOpen(false);
   };
 
-  const handleOpen = () => {
-    updateOpen(selectedItem)
-    setOpen(false);
-  };
+  const deleteOpenMenu = (request) => {
+    console.log(request);
 
-  const updateOpen = (selectedItem) => {
-      console.log(selectedItem)
-    const fetchData = async () => {
+    const deleteOpenMenu = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:4000/update-open",
+          "http://localhost:4000/delete-open-menu",
           "POST",
-          JSON.stringify(selectedItem),
+          JSON.stringify(request),
           header
         );
 
-        console.log(responseData);
         if (responseData.status === 403) {
           authContext.logout();
           history.replace("/login");
         } else if (responseData.status === 200) {
-            window.location.reload();
+          setIsOpen(false);
+          window.location.reload();
         }
       } catch (err) {
         // done in http-hook.js
       }
     };
-    fetchData();
+    deleteOpenMenu();
   };
 
   return (
     <div className={classes.root}>
-      {props.list.map((item) => {
+      {props.list.map((item, key) => {
         return (
-          <List
-            component="nav"
-            aria-label={item.name}
-            key={item.id}
-            className={classesList.root}
-          >
-            <ListItem
-              button
-              className={classesListItem.root}
-              id={item.id}
-              onClick={handleClickOpen}
+          <div className={styles.ListContent} key={key}>
+            <DeleteIcon style={{ color: "#e76852" }} />
+            <List
+              component="nav"
+              aria-label={item.name}
+              key={item.id}
+              className={classesList.root}
+              key={key}
             >
-              <ListItemText primary={<div  id={item.id} >{item.name}</div>}/>
-            </ListItem>
-          </List>
+              <ListItem
+                button
+                className={classesListItem.root}
+                id={item.id}
+                onClick={handleDeleteDialogOpen}
+              >
+                <ListItemText primary={<div id={item.id}>{item.name}</div>} />
+              </ListItem>
+            </List>
+          </div>
         );
       })}
       <Dialog
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -131,15 +141,15 @@ export default function MenuItemList(props) {
       >
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            新增 {selectedItem.name} 為今日下午茶？
+            刪除今日下午茶 {name} ？
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             取消
           </Button>
-          <Button onClick={handleOpen} color="primary" autoFocus>
-            開單!
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            刪除!
           </Button>
         </DialogActions>
       </Dialog>

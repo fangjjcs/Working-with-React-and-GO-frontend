@@ -11,6 +11,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import { useHttpClient } from "../../../shared/hook/http-hook";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../../shared/context/auth-context";
+import EditDialog from "./EditDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +45,9 @@ export default function MenuItemList(props) {
   const classesList = useStylesList();
   const classesListItem = useStylesListItem();
 
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
   const [selectedItem, setSelectedItem] = useState({
       id: null,
       name: ""
@@ -63,41 +66,25 @@ export default function MenuItemList(props) {
         id: parseInt(e.target.id),
         name: e.target.innerText
     });
-    setOpen(true);
+    setIsOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setIsOpen(false);
   };
 
   const handleOpen = () => {
-    updateOpen(selectedItem)
-    setOpen(false);
+    updateMenu(selectedItem)
+    setIsOpen(false);
   };
 
-  const updateOpen = (selectedItem) => {
-      console.log(selectedItem)
-    const fetchData = async () => {
-      try {
-        const responseData = await sendRequest(
-          "http://localhost:4000/update-open",
-          "POST",
-          JSON.stringify(selectedItem),
-          header
-        );
+  const updateMenu = (selectedItem) => {
+    console.log(selectedItem)
+    setIsEdit(true)
+  };
 
-        console.log(responseData);
-        if (responseData.status === 403) {
-          authContext.logout();
-          history.replace("/login");
-        } else if (responseData.status === 200) {
-            window.location.reload();
-        }
-      } catch (err) {
-        // done in http-hook.js
-      }
-    };
-    fetchData();
+  const handleEditClose = () => {
+    setIsEdit(false);
   };
 
   return (
@@ -122,7 +109,7 @@ export default function MenuItemList(props) {
         );
       })}
       <Dialog
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -131,7 +118,7 @@ export default function MenuItemList(props) {
       >
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            新增 {selectedItem.name} 為今日下午茶？
+            編輯 {selectedItem.name} ？
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -139,10 +126,13 @@ export default function MenuItemList(props) {
             取消
           </Button>
           <Button onClick={handleOpen} color="primary" autoFocus>
-            開單!
+            編輯!
           </Button>
         </DialogActions>
       </Dialog>
+      {isEdit && (
+        <EditDialog isOpen={isEdit} onClickCancel={handleEditClose} selectedItem={selectedItem}></EditDialog>
+      )}
     </div>
   );
 }

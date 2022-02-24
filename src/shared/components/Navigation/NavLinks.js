@@ -23,7 +23,7 @@ const NavLinks = (props) => {
             <NavLink to="/result">點餐狀態</NavLink>
           </li>
           <li>
-            <NavLink to="/admin">管理</NavLink>
+            <NavLink to="/admin">菜單管理</NavLink>
           </li>
         </>
       )}

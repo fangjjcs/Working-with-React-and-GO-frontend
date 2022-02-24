@@ -50,7 +50,7 @@ const LoginPage = (props) => {
   const handleSubmit = () => {
     const request = {
       username: username,
-      password: password,
+      // password: password,
     };
     login(request);
   };
@@ -92,7 +92,7 @@ const LoginPage = (props) => {
         <Box className="login-page-box">
           <FormControl variant="standard" className="login-form">
             <InputLabel htmlFor="input-with-icon-adornment">
-              Username
+              工號
             </InputLabel>
             <Input
               id="input-with-icon-adornment"
@@ -110,7 +110,7 @@ const LoginPage = (props) => {
               </FormHelperText>
             )}
           </FormControl>
-          <FormControl variant="standard" className="login-form">
+          {/* <FormControl variant="standard" className="login-form">
             <InputLabel htmlFor="input-with-icon-adornment">
               Password
             </InputLabel>
@@ -130,7 +130,7 @@ const LoginPage = (props) => {
                 {errorMsg}
               </FormHelperText>
             )}
-          </FormControl>
+          </FormControl> */}
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Log In
           </Button>
