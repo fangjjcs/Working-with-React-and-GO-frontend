@@ -7,7 +7,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     padding: var(--spacing-sm);
     gap: var(--spacing-sm);
 }
@@ -19,6 +18,7 @@
     justify-content: center;
     align-items: flex-end;
     padding: var(--spacing-md);
+    margin-top: var(--spacing-md);
     gap: var(--spacing-md);
 }
 

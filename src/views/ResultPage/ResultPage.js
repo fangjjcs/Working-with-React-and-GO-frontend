@@ -151,7 +151,7 @@ const ResultPage = (props) => {
     return (
       <span className="edit-box">
         <Button className="edit-btn" onClick={() => buttonClicked()}>
-          <EditRoundedIcon />
+          <EditRoundedIcon style={{ color: "#005566" }}/>
         </Button>
       </span>
     );
@@ -168,7 +168,7 @@ const ResultPage = (props) => {
     return (
       <span className="edit-box">
         <Button className="edit-btn" onClick={() => buttonClicked()}>
-          <DeleteIcon />
+          <DeleteIcon style={{ color: "#e76852" }}/>
         </Button>
       </span>
     );
@@ -190,7 +190,7 @@ const ResultPage = (props) => {
     const deleteOrder = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:4000/delete-order",
+          process.env.REACT_APP_API_URL+"/delete-order",
           "POST",
           JSON.stringify(request),
           header
@@ -229,7 +229,7 @@ const ResultPage = (props) => {
             >
               <Button onClick={() => onBtnExport()}>
                 {" "}
-                <CloudDownloadIcon />{" "}
+                <CloudDownloadIcon style={{ color: "#005566" }}/>{" "}
               </Button>
               <AgGridReact
                 pagination={true}

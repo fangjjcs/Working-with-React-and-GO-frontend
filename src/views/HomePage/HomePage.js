@@ -70,7 +70,7 @@ const HomePage = (props) => {
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:4000/get-opened-menu",
+          process.env.REACT_APP_API_URL+"/get-opened-menu",
           "POST",
           JSON.stringify({}),
           header

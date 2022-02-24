@@ -16,11 +16,28 @@ import {
   Button,
 } from "@material-ui/core";
 import { Restaurant, Fastfood, Info } from "@material-ui/icons";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import "./EditDialog.css";
 import { useHttpClient } from "../../../shared/hook/http-hook";
 import AuthContext from "../../../shared/context/auth-context";
 import { useHistory } from "react-router-dom";
+
+const theme = createTheme({
+  status: {
+    danger: "#e53e3e",
+  },
+  palette: {
+    primary: {
+      main: "#28464b",
+      darker: "#053e85",
+    },
+    neutral: {
+      main: "#28464b",
+      contrastText: "#fff",
+    },
+  },
+});
 
 const EditDialog = (props) => {
   const [isError, setIsError] = useState(false);
@@ -109,7 +126,7 @@ const EditDialog = (props) => {
     const updateMenu = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:4000/update-menu",
+          process.env.REACT_APP_API_URL+"/update-menu",
           "POST",
           JSON.stringify(request),
           header
@@ -155,75 +172,79 @@ const EditDialog = (props) => {
     >
       <DialogTitle id="form-dialog-title">修改菜單 : </DialogTitle>
       <DialogContent className="order-content">
-        <Box className="edit-box">
-          <div className="upload-content">
-            <label htmlFor="contained-button-file">
-              <Button variant="contained" color="primary" component="span">
-                上傳照片
-              </Button>
-            </label>
-            <input
-              accept="image/*"
-              className="upload-btn"
-              id="contained-button-file"
-              multiple
-              type="file"
-              onChange={handleImgChange}
-            />
-            <FormControl variant="standard" className="login-form">
-              <InputLabel htmlFor="input-with-icon-adornment">
-                店家名稱
-              </InputLabel>
-              <Input
-                id="input-with-icon-adornment"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <Restaurant />
-                  </InputAdornment>
-                }
-                value={menuName}
-                onChange={handleNameChange}
+        <ThemeProvider theme={theme}>
+          <Box className="edit-content-box">
+            <div className="upload-content">
+              <label htmlFor="contained-button-file">
+                <Button variant="contained" color="primary" component="span">
+                  上傳照片
+                </Button>
+              </label>
+              <input
+                accept="image/*"
+                className="upload-btn"
+                id="contained-button-file"
+                multiple
+                type="file"
+                onChange={handleImgChange}
               />
-              {isError && menuName === "" && (
-                <FormHelperText error>Can not be empty</FormHelperText>
-              )}
-            </FormControl>
-            <FormControl variant="standard" className="login-form">
-              <InputLabel htmlFor="input-with-icon-adornment">類型</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <Fastfood />
-                  </InputAdornment>
-                }
-                value={type}
-                onChange={handleTypeChange}
-              >
-                <MenuItem value={"food"}>食物</MenuItem>
-                <MenuItem value={"drink"}>飲料</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl variant="standard" className="login-form">
-              <InputLabel htmlFor="input-with-icon-adornment">
-                其他資訊
-              </InputLabel>
-              <Input
-                id="input-with-icon-adornment"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <Info />
-                  </InputAdornment>
-                }
-                value={memo}
-                onChange={handleMemoChange}
-              />
-            </FormControl>
-          </div>
+              <FormControl variant="standard" className="login-form">
+                <InputLabel htmlFor="input-with-icon-adornment">
+                  店家名稱
+                </InputLabel>
+                <Input
+                  id="input-with-icon-adornment"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <Restaurant />
+                    </InputAdornment>
+                  }
+                  value={menuName}
+                  onChange={handleNameChange}
+                />
+                {isError && menuName === "" && (
+                  <FormHelperText error>Can not be empty</FormHelperText>
+                )}
+              </FormControl>
+              <FormControl variant="standard" className="login-form">
+                <InputLabel htmlFor="input-with-icon-adornment">
+                  類型
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <Fastfood />
+                    </InputAdornment>
+                  }
+                  value={type}
+                  onChange={handleTypeChange}
+                >
+                  <MenuItem value={"food"}>食物</MenuItem>
+                  <MenuItem value={"drink"}>飲料</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl variant="standard" className="login-form">
+                <InputLabel htmlFor="input-with-icon-adornment">
+                  其他資訊
+                </InputLabel>
+                <Input
+                  id="input-with-icon-adornment"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <Info />
+                    </InputAdornment>
+                  }
+                  value={memo}
+                  onChange={handleMemoChange}
+                />
+              </FormControl>
+            </div>
 
-          <img className="image" src={fileString}></img>
-        </Box>
+            <img className="image" src={fileString}></img>
+          </Box>
+        </ThemeProvider>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">

@@ -138,7 +138,7 @@ const OrderPage = (props) => {
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:4000/add-order",
+          process.env.REACT_APP_API_URL+"/add-order",
           "POST",
           JSON.stringify(request),
           header

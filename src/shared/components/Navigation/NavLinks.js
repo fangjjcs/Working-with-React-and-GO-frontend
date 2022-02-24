@@ -11,7 +11,7 @@ const NavLinks = (props) => {
     <ul className="nav-links">
       <li>
         <NavLink to="/" exact>
-          首頁
+          開始點餐
         </NavLink>
       </li>
       {authContext.isLogin && (

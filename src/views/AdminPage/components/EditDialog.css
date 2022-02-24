@@ -1,5 +1,5 @@
 
-.admin-page-header .order-content{
+.order-content{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -8,7 +8,7 @@
     gap: var(--spacing-sm);
 }
 
-.admin-page-header .edit-box{
+.edit-content-box{
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -17,22 +17,22 @@
     padding: var(--spacing-md);
     gap: var(--spacing-md);
 }
-.admin-page-header .login-form {
+.login-form {
     width: 100%;
     height: 100%;
 }
 
-.admin-page-header .upload-btn {
+.upload-btn {
     display: none;
 }
 
-.admin-page-header .upload-content, .image {
+.upload-content, .image {
     min-width: 400px;
     max-width: 640px;
     min-height: 400px;
 }
 
-.admin-page-header .upload-content {
+.upload-content {
     width: 400px;
     display: flex;
     flex-direction: column;

@@ -34,7 +34,7 @@ const theme = createTheme({
   },
 });
 
-const MoviesPage = (props) => {
+const CreatePage = (props) => {
   const [img, setImg] = useState(null);
   const [fileString, setFileString] = useState("");
 
@@ -106,7 +106,7 @@ const MoviesPage = (props) => {
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:4000/create",
+          process.env.REACT_APP_API_URL+"/create",
           "POST",
           JSON.stringify(request),
           header
@@ -199,6 +199,7 @@ const MoviesPage = (props) => {
                   }
                   value={memo}
                   onChange={handleMemoChange}
+                  placeholder={"例如：電話"}
                 />
               </FormControl>
               <Button
@@ -218,4 +219,4 @@ const MoviesPage = (props) => {
   );
 };
 
-export default MoviesPage;
+export default CreatePage;

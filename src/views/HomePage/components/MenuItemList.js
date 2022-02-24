@@ -80,7 +80,7 @@ export default function MenuItemList(props) {
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:4000/update-open",
+          process.env.REACT_APP_API_URL+"/update-open",
           "POST",
           JSON.stringify(selectedItem),
           header

@@ -60,7 +60,7 @@ const LoginPage = (props) => {
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:4000/v1/signin",
+          process.env.REACT_APP_API_URL+"/v1/signin",
           "POST",
           JSON.stringify(request)
         );
@@ -132,7 +132,7 @@ const LoginPage = (props) => {
             )}
           </FormControl> */}
           <Button variant="contained" color="primary" onClick={handleSubmit}>
-            Log In
+            確認
           </Button>
         </Box>
       </ThemeProvider>

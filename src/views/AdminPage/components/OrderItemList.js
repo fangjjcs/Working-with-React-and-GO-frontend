@@ -86,7 +86,7 @@ export default function OrderItemList(props) {
     const deleteOpenMenu = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:4000/delete-open-menu",
+          process.env.REACT_APP_API_URL+"/delete-open-menu",
           "POST",
           JSON.stringify(request),
           header

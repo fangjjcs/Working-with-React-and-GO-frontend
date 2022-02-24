@@ -51,10 +51,10 @@ const MainNavigation = (props) => {
         <nav className="main-navigation__header-nav-auth">
           <ul className="nav-links">
             {isLogin ? (
-                <div className="logout-btn" onClick={logoutHandler}>Logout</div>
+                <div className="logout-btn" onClick={logoutHandler}>登出</div>
             ) : (
               <li>
-                <NavLink to="/login">Login</NavLink>
+                <NavLink to="/login">登入</NavLink>
               </li>
             )}
           </ul>
