@@ -1,22 +1,24 @@
 import { Box } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
 import "./AdminPage.css";
 import FoodPaper from "./components/FoodPaper";
 import MenuItemList from "./components/MenuItemList";
 import OrderItemList from "./components/OrderItemList";
-import { useContext, useEffect, useState } from "react";
-import { useHttpClient } from "../../shared/hook/http-hook";
+import { useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../shared/context/auth-context";
-import SnackBar from "./components/SnackBar";
+import { getAllMenu, getOpenedMenu } from "../../store/menu-actions";
 
-const AdminPage = (props) => {
-  const [food, setFood] = useState([]);
-  const [drink, setDrink] = useState([]);
-  const [opened, setOpened] = useState([]);
-  const [isSnackBarOpen, setSnackBarOpen] = useState(false);
-
-  const { isLoading, error, sendRequest } = useHttpClient();
+const AdminPage = () => {
+  const dispatch = useDispatch();
   const history = useHistory();
+
+  const food = useSelector((state) => state.menu.food);
+  const drink = useSelector((state) => state.menu.drink);
+  const todayMenu = useSelector((state) => state.menu.todayMenu);
+  const initialized = useSelector((state) => state.menu.initialized);
 
   const authContext = useContext(AuthContext);
   const header = new Headers();
@@ -27,80 +29,11 @@ const AdminPage = (props) => {
     if (!authContext.isLogin) {
       history.replace("/login");
     }
-  }, []);
-
-  useEffect(() => {
-    checkSnackBar();
-  }, [authContext.isSuccess]);
-
-  useEffect(() => {
-    getAllMenu();
-    getOpenedMenu();
-    checkSnackBar();
-  }, []);
-
-  const checkSnackBar = () => {
-    console.log(authContext);
-
-    if (authContext.isSuccess) {
-      setSnackBarOpen(true);
+    if (!initialized) {
+      dispatch(getAllMenu(header, history));
+      dispatch(getOpenedMenu(header, history));
     }
-    setTimeout(() => {
-      setSnackBarOpen(false);
-      authContext.setSuccess("");
-    }, 3000);
-  };
-
-  const getAllMenu = () => {
-    const fetchData = async () => {
-      try {
-        const responseData = await sendRequest(
-          process.env.REACT_APP_API_URL+"/get-all-menu",
-          "POST",
-          JSON.stringify({}),
-          header
-        );
-
-        console.log(responseData);
-        if (responseData.status === 403) {
-          history.logout();
-          history.replace("/login");
-        } else if (responseData.status === 200) {
-          setFood(responseData.menu.filter((item) => item.type === "food"));
-          setDrink(responseData.menu.filter((item) => item.type === "drink"));
-        }
-      } catch (err) {
-        // done in http-hook.js
-      }
-    };
-    fetchData();
-  };
-
-  const getOpenedMenu = () => {
-    const fetchData = async () => {
-      try {
-        const responseData = await sendRequest(
-            process.env.REACT_APP_API_URL+"/get-opened-menu",
-          "POST",
-          JSON.stringify({}),
-          header
-        );
-
-        console.log(responseData);
-        if (responseData.status === 403) {
-          authContext.logout();
-          history.replace("/login");
-        } else if (responseData.status === 200) {
-          if (responseData.menu !== null) {
-            setOpened(responseData.menu);
-          }
-        }
-      } catch (err) {
-        // done in http-hook.js
-      }
-    };
-    fetchData();
-  };
+  }, []);
 
   return (
     <header className="admin-page-header">
@@ -112,13 +45,11 @@ const AdminPage = (props) => {
           {drink.length > 0 && <MenuItemList list={drink}></MenuItemList>}
         </FoodPaper>
         <FoodPaper type={"order"} width={72}>
-          {opened.length > 0 && <OrderItemList list={opened}></OrderItemList>}
+          {todayMenu.length > 0 && (
+            <OrderItemList list={todayMenu}></OrderItemList>
+          )}
         </FoodPaper>
       </Box>
-      <SnackBar
-        isOpen={isSnackBarOpen}
-        text={authContext.successText}
-      ></SnackBar>
     </header>
   );
 };

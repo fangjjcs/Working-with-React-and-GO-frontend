@@ -1,24 +1,27 @@
 import { Box } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import "./HomePage.css";
 import FoodPaper from "./components/FoodPaper";
 import MenuItemList from "./components/MenuItemList";
 import OrderItemList from "./components/OrderItemList";
-import { useContext, useEffect, useState } from "react";
-import { useHttpClient } from "../../shared/hook/http-hook";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../shared/context/auth-context";
 import SnackBar from "./components/SnackBar";
+import { getAllMenu, getOpenedMenu } from "../../store/menu-actions";
 
-const HomePage = (props) => {
-  const [food, setFood] = useState([])
-  const [drink, setDrink] = useState([])
-  const [opened, setOpened] = useState([])
-  const [isSnackBarOpen, setSnackBarOpen] = useState(false)
-//   const [snackBarText, setSnackBarText] = useState("")
+const HomePage = () => {
+  const [isSnackBarOpen, setSnackBarOpen] = useState(false);
 
-  const { isLoading, error, sendRequest } = useHttpClient();
+  const dispatch = useDispatch();
   const history = useHistory();
+
+  const food = useSelector((state) => state.menu.food);
+  const drink = useSelector((state) => state.menu.drink);
+  const todayMenu = useSelector((state) => state.menu.todayMenu);
+  const isLoading = useSelector((state) => state.menu.isLoading);
 
   const authContext = useContext(AuthContext);
   const header = new Headers();
@@ -26,86 +29,44 @@ const HomePage = (props) => {
   header.append("Authorization", "Bearer " + authContext.token);
 
   useEffect(() => {
-    getAllMenu()
-    getOpenedMenu()
-    checkSnackBar()
+    dispatch(getAllMenu(header, history));
+    dispatch(getOpenedMenu(header, history));
+    checkSnackBar();
   }, []);
 
   const checkSnackBar = () => {
-    if(authContext.isSuccess){
-        setSnackBarOpen(true)
+    if (authContext.isSuccess) {
+      setSnackBarOpen(true);
     }
     setTimeout(() => {
-        setSnackBarOpen(false)
-        authContext.setSuccess("")
-    }, 3000)
-  }
-
-  const getAllMenu = () => {
-    const fetchData = async () => {
-      try {
-        const responseData = await sendRequest(
-          "http://localhost:4000/get-all-menu",
-          "POST",
-          JSON.stringify({}),
-          header
-        );
-
-        console.log(responseData);
-        if (responseData.status === 403) {
-          history.logout()
-          history.replace("/login")
-        } else if (responseData.status === 200) {
-          setFood(responseData.menu.filter((item) => item.type === "food"));
-          setDrink(responseData.menu.filter((item) => item.type === "drink"));
-        }
-      } catch (err) {
-        // done in http-hook.js
-      }
-    };
-    fetchData();
-  };
-
-  const getOpenedMenu = () => {
-    const fetchData = async () => {
-      try {
-        const responseData = await sendRequest(
-          process.env.REACT_APP_API_URL+"/get-opened-menu",
-          "POST",
-          JSON.stringify({}),
-          header
-        );
-
-        console.log(responseData);
-        if (responseData.status === 403) {
-          authContext.logout();
-          history.replace("/login");
-        } else if (responseData.status === 200) {
-          if (responseData.menu !== null) {
-            setOpened(responseData.menu);
-          }
-        }
-      } catch (err) {
-        // done in http-hook.js
-      }
-    };
-    fetchData();
+      setSnackBarOpen(false);
+      authContext.setSuccess("");
+    }, 3000);
   };
 
   return (
     <header className="home-page-header">
       <Box className="home-page-box">
-        <FoodPaper type={"food"} width={36}>
-          {food.length > 0 && <MenuItemList list={food}></MenuItemList>}
-        </FoodPaper>
-        <FoodPaper type={"drink"} width={36}>
-          {drink.length > 0 && <MenuItemList list={drink}></MenuItemList>}
-        </FoodPaper>
-        <FoodPaper type={"order"} width={72}>
-          {opened.length > 0 && <OrderItemList list={opened}></OrderItemList>}
-        </FoodPaper>
+        {!isLoading && (
+          <Fragment>
+            <FoodPaper type={"food"} width={36}>
+              {food.length > 0 && <MenuItemList list={food}></MenuItemList>}
+            </FoodPaper>
+            <FoodPaper type={"drink"} width={36}>
+              {drink.length > 0 && <MenuItemList list={drink}></MenuItemList>}
+            </FoodPaper>
+            <FoodPaper type={"order"} width={72}>
+              {todayMenu.length > 0 && (
+                <OrderItemList list={todayMenu}></OrderItemList>
+              )}
+            </FoodPaper>
+          </Fragment>
+        )}
       </Box>
-      <SnackBar isOpen={isSnackBarOpen} text={authContext.successText}></SnackBar>
+      <SnackBar
+        isOpen={isSnackBarOpen}
+        text={authContext.successText}
+      ></SnackBar>
     </header>
   );
 };

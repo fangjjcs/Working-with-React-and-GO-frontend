@@ -10,7 +10,6 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
-import Password from "@material-ui/icons/VpnKey";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import "./LoginPage.css";
@@ -29,10 +28,9 @@ const theme = createTheme({
   },
 });
 
-const LoginPage = (props) => {
+const LoginPage = () => {
 
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const { isLoading, error, sendRequest } = useHttpClient();
@@ -43,14 +41,9 @@ const LoginPage = (props) => {
     setUsername(event.target.value);
   };
 
-  const handlePwdChange = (event) => {
-    setPassword(event.target.value);
-  };
-
   const handleSubmit = () => {
     const request = {
       username: username,
-      // password: password,
     };
     login(request);
   };
@@ -110,27 +103,6 @@ const LoginPage = (props) => {
               </FormHelperText>
             )}
           </FormControl>
-          {/* <FormControl variant="standard" className="login-form">
-            <InputLabel htmlFor="input-with-icon-adornment">
-              Password
-            </InputLabel>
-            <Input
-              id="standard-password-input"
-              type="password"
-              startAdornment={
-                <InputAdornment position="start">
-                  <Password />
-                </InputAdornment>
-              }
-              value={password}
-              onChange={handlePwdChange}
-            />
-            {isError && (
-              <FormHelperText error id="standard-helper-text">
-                {errorMsg}
-              </FormHelperText>
-            )}
-          </FormControl> */}
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             確認
           </Button>
